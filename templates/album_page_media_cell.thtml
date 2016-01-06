@@ -2,7 +2,7 @@
   <div class="mg_thumbnail_wrapper">{media_item_thumbnail}{mp3_podcast}</div>
 </div>
 
-<div class="mg_title">
+<div class="uk-h2">
 {media_title}
 {!if musicalbum}
 &nbsp;/&nbsp;{musicalbum}
@@ -36,5 +36,5 @@
 {!endif}
 
 {!if enable_keywords}
-<div class="mgMediaKeywords"><span class="pluginSmallText"><span style="font-weight:bold;">{lang_keywords}</span> {media_keywords}</span></div>
+<div class="mgMediaKeywords"><span class="uk-text-small"><span class="uk-text-bold">{lang_keywords}</span> {media_keywords}</span></div>
 {!endif}

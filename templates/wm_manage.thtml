@@ -49,7 +49,7 @@ else{
 jkpopwin.resizeTo(popwidth, popheight+30)
 }
 jkpopwin.document.open()
-jkpopwin.document.write('<html><title>'+windowtitle+'</title><body '+bodyattribute+'><img src="'+imgpath+'" style="margin-bottom: 0.5em"><br{xhtml}>'+textdescription+'</body></html>')
+jkpopwin.document.write('<html><title>'+windowtitle+'</title><body '+bodyattribute+'><img src="'+imgpath+'" class="uk-margin-bottom"><br{xhtml}>'+textdescription+'</body></html>')
 jkpopwin.document.close()
 jkpopwin.focus()
 }

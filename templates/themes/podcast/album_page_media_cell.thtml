@@ -2,15 +2,15 @@
 <a name="{media_id}"></a>
 <h1 style="padding-bottom:0px;margin-bottom:0px;">{media_title}</h1>
 <h2 style="padding-top:0px;padding-bottom:2px;margin-top:2px;margin-bottom:2px;">{musicalbum} {lang_hyphen} {artist}</h2>
-<div class="pluginSmallText">
+<div class="uk-text-small">
  {lang_published} {media_owner} {lang_on} {media_time}
 </div>
 {!if media_cell_keywords}
 <div class="pluginMediumText">{media_cell_keywords}</div>
 {!endif}
-<table style="border:none;">
+<table class="uk-table uk-table-condensed uk-table-striped uk-width-1-1" style="background:#ffffff;">
   <tr>
-    <td style="vertical-align:top;">
+    <td class="uk-vertical-align-top">
      <div class="mgPluginMI" style="padding-right:3px;padding-top:5px;">{media_item_thumbnail}</div>
      <div class="pluginItemFooter" style="clear:both;">
 
@@ -24,13 +24,13 @@
       {rating_box}
       {!endif}
       {!if alt_edit_link}
-      <div class="pluginSmallText">{alt_edit_link}</div>
+      <div class="uk-text-small">{alt_edit_link}</div>
       {!endif}
 
 
      </div>
     </td>
-    <td style="vertical-align:top;">
+    <td class="uk-vertical-align-top">
       <p>{media_description}</p>
     </td>
   </tr>

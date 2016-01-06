@@ -1,72 +1,70 @@
 {lbslideshow}
 <script type="text/javascript" src="{site_url}/players/audio-player.js"></script>
 
-<table cellspacing="0" cellpadding="5" style="width:100%;border:none;margin:0px auto;">
+<table class="uk-table uk-table-condensed uk-table-striped uk-width-1-1" style="background:#ffffff;">
   <tr>
-    <td class="pluginCellTitle" style="text-align:left;vertical-align:middle;">
-      <span style="font-weight:bold;">{lang_search_title}</span>
-    </td>
-    <td class="pluginCellTitle" style="text-align:right;vertical-align:middle;">
+    <th>
+      {lang_search_title}
+    </th>
+    <td>
       {select_adminbox}
     </td>
   </tr>
 </table>
-<br{xhtml}>
-{msg}
-<br{xhtml}>
+<p>{msg}</p>
 
 <form name="mgsearch" action="{s_form_action}" method="post" class="uk-form">
 <div>
-<table style="border:none;">
+<table class="uk-table uk-table-condensed uk-table-striped uk-width-1-1" style="background:#ffffff;">
 <tr>
-  <td style="text-align:right;">
+  <td class="uk-text-right">
     {lang_search_for}:
   </td>
-  <td style="text-align:left;">
+  <td class="uk-text-left">
     <input type="text" name="keywords" size="40" value="{search_keywords}"{xhtml}>&nbsp;
     {keytype_select}
   </td>
 </tr>
 
 <tr>
-  <td style="text-align:right;">
+  <td class="uk-text-right">
     {lang_search_in}:
   </td>
-  <td style="text-align:left;">
+  <td class="uk-text-left">
     {swhere_select}
   </td>
 </tr>
 
 <tr>
-  <td style="text-align:right;">
+  <td class="uk-text-right">
     {lang_category}:
   </td>
-  <td style="text-align:left;">
+  <td class="uk-text-left">
     {cat_select}
   </td>
 </tr>
 
 <tr>
-  <td style="text-align:right;">
+  <td class="uk-text-right">
     {lang_user}:
   </td>
-  <td style="text-align:left;">
+  <td class="uk-text-left">
     {user_select}
   </td>
 </tr>
 
 
 <tr>
-  <td style="text-align:right;">
+  <td class="uk-text-right">
     {lang_results}:
   </td>
-  <td style="text-align:left;">
+  <td class="uk-text-left">
     {nresults_select}&nbsp;{lang_per_page}
   </td>
 </tr>
 <tr><td colspan="2">&nbsp;</td></tr>
 <tr>
-<td colspan="2" style="text-align:center;">
+<td colspan="2" class="uk-text-center">
 <input type="submit" name="mode" value="{lang_search}"{xhtml}>&nbsp;&nbsp;
 <input type="submit" name="mode" value="{lang_cancel}"{xhtml}>
 <input type="hidden" name="mode" value="search"{xhtml}>
@@ -93,29 +91,32 @@
 </div>
 
 {!if album_description}
-<div style="text-align:center;font-size:small;text-indent:0;padding-top:2px;">
+<div class="uk-text-center uk-text-small uk-margin">
    {album_description}
 </div>
 {!endif}
 
 {!if album_body}
-<div style="width:100%;margin:10px 0;clear:both">
+<div class="uk-width-1-1 margin uk-clearfix">
 <!-- BEGIN ImageRow -->
 <!-- BEGIN ImageColumn -->
-<div class="mg_album_cell" style="width:{table_column_width};{clear_float}">
+<div class="mg_album_cell uk-clearfix" style="width:{table_column_width}">
 {CELL_DISPLAY_IMAGE}
 </div>
 <!-- END ImageColumn -->
 <!-- END ImageRow -->
 </div>
-<div style="clear:both"></div>
+<div class="uk-clearfix"></div>
 {!endif}
 
 {!if lang_no_image}<div class="noitems">{lang_no_image}</div>{!endif}
 
 <div class="mg_navbar">
-  <span>{album_id_display}</span><span class="mg_separator" style="">|</span><span>{page_number}</span>
+  <ul class="uk-subnav uk-subnav-line uk-flex-center">
+    <li>{album_id_display}</li>
+    <li>{page_number}</li>
+  </ul>
   <div class="mg_pagination">{bottom_pagination}</div>
 </div>
-<div class="mg_jumpbox">{jumpbox}</div>
-<div class="mg_sortbox">{select_sortbox}</div>
+<div class="uk-float-right">{jumpbox}</div>
+<div class="uk-float-left">{select_sortbox}</div>

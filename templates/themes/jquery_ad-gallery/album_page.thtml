@@ -6,17 +6,17 @@
 </div>
 
 
-<h2 style="float:left;font-weight:bold;font-size:2em;line-height:2em;padding-left:5px;">{album_title}</h2>
-<div class="" style="float:right;text-align:right;vertical-align:middle;white-space:nowrap;padding-right:5px;line-height:2em;">
+<h2 class="uk-float-left uk-text-bold uk-h2 uk-margin-left">{album_title}</h2>
+<div class="uk-float-right uk-text-right uk-vertical-align-middle uk-text-nowrap uk-margin-right">
   {!if rsslink}
     &nbsp;{rsslink}
   {!endif}
   {select_adminbox}
 </div>
-<div style="clear:both;"></div>
+<div class="uk-clearfix"></div>
 
 {!if album_description}
-<div style="text-align:left;line-height:1.5em;font-size:1.2em;text-indent:0;padding:1em 50px;">
+<div class="uk-text-left uk-text-small uk-margin-left uk-margin">
    {album_description}
 </div>
 {!endif}

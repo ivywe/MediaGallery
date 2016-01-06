@@ -25,7 +25,7 @@
 </div>
 
 
-<table style="width:100%;border:none;margin:0px auto;">
+<table class="uk-table uk-table-condensed uk-table-striped uk-width-1-1" style="background:#ffffff;">
 <!-- BEGIN ImageRow -->
 <!-- BEGIN ImageColumn -->
 <tr>

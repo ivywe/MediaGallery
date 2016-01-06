@@ -1,5 +1,5 @@
 {start_block_last10mediaitems}
-  <table class="mg_mediaitems_table">
+  <table class="uk-table uk-table-condensed uk-table-striped uk-width-1-1" style="background:#ffffff;">
     <tr>
       <th style="width:55px;">{lang_thumbnail}</th>
       <th style="width:35%;">{lang_title}</th>
@@ -8,10 +8,10 @@
     </tr>
     <!-- BEGIN itemRow -->
     <tr>
-      <td style="vertical-align:middle;text-align:center;">{mediaitem_begin_href}{mediaitem_image}{mediaitem_end_href}</td>
-      <td style="vertical-align:middle;text-align:left;">{mediaitem_title}</td>
-      <td style="vertical-align:middle;text-align:left;">{mediaitem_album_begin_href}<span style="font-weight:bold;">{mediaitem_album_title}</span>{mediaitem_end_href}</td>
-      <td style="vertical-align:middle;text-align:center;">{mediaitem_date}</td>
+      <td class="uk-vertical-align-middle uk-text-center">{mediaitem_begin_href}{mediaitem_image}{mediaitem_end_href}</td>
+      <td class="uk-vertical-align-middle uk-text-center">{mediaitem_title}</td>
+      <td class="uk-vertical-align-middle uk-text-center uk-text-bold">{mediaitem_album_begin_href}{mediaitem_album_title}{mediaitem_end_href}</td>
+      <td class="uk-vertical-align-middle uk-text-center">{mediaitem_date}</td>
     </tr>
     <!-- END itemRow -->
   </table>
