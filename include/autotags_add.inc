@@ -310,7 +310,32 @@ function MG_albumlist (
 	return $rt;
 	
 }
+function MG_albumThumbnail (
+	$filename
+)
+{
+	global $_MG_CONF;
+	
+    if ( $filename == '' ) {
+		$album_last_image = $_MG_CONF['mediaobjects_url'] . '/empty.png';
+        //$mediasize = @getimagesize($_MG_CONF['path_mediaobjects'] . 'empty.png');
+    } else {
+        $mediasize = false;
+		foreach ($_MG_CONF['validExtensions'] as $ext ) {
+           if ( file_exists($_MG_CONF['path_mediaobjects'] . 'tn/' . $filename[0] .'/' . $filename . $ext) ) {
+                $album_last_image = $_MG_CONF['mediaobjects_url'] . '/tn/' . $filename[0] .'/' . $filename . $ext;
+                $mediasize = @getimagesize($_MG_CONF['path_mediaobjects'] . 'tn/' . $filename[0] .'/' . $filename . $ext);
+                break;
+           }
+        }
+        if ($mediasize == false ) {
+             $album_last_image = $_MG_CONF['mediaobjects_url'] . '/missing.png';
+             $mediasize = @getimagesize($_MG_CONF['path_mediaobjects'] . 'missing.png');
+        }
+    }
+	return $album_last_image;
 
+}
 //Split second argument
 function MG_parm2 ($p2)
 {

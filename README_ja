@@ -1,8 +1,10 @@
 -----------------------------------------------------------------------
-- Media Gallery Plugin for Geeklog
-- version: 1.7.0
+- Media Gallery WKZ Plugin for Geeklog hacked by Ivywe
+- version: 1.6.15.ivywe01
 - author:  Yoshinori Tahara - dengen <taharaxp AT gmail DOT com>
-- date:    2015-xx-xx
+- author:  Kazuko Tsuchitani - Tsuchi <tsuchitani AT ivywe DOT co DOT jp>
+- author:  Tetsuko Komma - Ivy <komma AT ivywe DOT co DOT jp>
+- date:    2013-12-31
 - license: GPLv2
 -----------------------------------------------------------------------
 
@@ -158,16 +160,86 @@ Version1.6.15について
 * jQuery Cycle Lite Pluginを更新しました。
 * SWFObjectを更新しました。
 
-Version1.6.16について
----------------------
-* Slideshow Autotagが正しく動作しない問題を修正しました。
-
-Version1.6.17について
----------------------
-* Geeklog2.1.0で正しく動作しない問題を修正しました。
-
 注意
 ----
 * public_html/mediagallery/docs内のusage.html及びupgrade.htmlは、Media Gallery v1.6
   の公開時点のものであることから、現バージョンの内容と異なる部分があります。
 
+Feature of Version1.6.15.ivywe01
+------------------------
+ 2013/11/11 Chenage autotag Medialist format.
+ 2013/12/09 Change autotags media - width:-1 then do not set image size
+ 2013/12/31 add parameter class to autotag media
+
+  Format:　[albumlist:albumid limitcnt:xx order:xx XXXX]
+		Display sub album of album:albumid.
+		limitcnt: number. default:10
+		order:RANDOM ... random. 
+		      or Album id order.
+		<ul>
+		<li>Sub albun 1 thumbnail of album<br />Description</li>
+		<li>Sub albun 2 thumbnail of album<br />Description</li>
+		<li>Sub albun 3 thumbnail of album<br />Description</li>
+		...
+		</ul>
+           e.g. [albumlist:3 limitcnt:10 order:RANDOM class1 class2 class3]
+		
+  Format:　[medialist:albumid limitcnt:xx order:xx {class}]
+		Display Media list by using templates.
+		limitcnt: number. default:10
+
+           e.g. [medialist:3 limitcnt:10 class1 class2 class3]
+
+  Format:　[media:id class:xxx]
+
+Feature of Version1.6.16.ivywe01
+---------------------
+ 2015/03/11 Chenage autotag Medialist format.
+
+  Format:　[medialist:albumid theme:xx limitcnt:xx order:xx {class}]
+		Display Media list by using templates.
+		theme:default:
+			templates/medialist/default/autotag_medialist.thtml
+			templates/medialist/default/autotag_medialist_col.thtml
+		limitcnt: number. default:10
+
+           e.g. [medialist:3 theme:list limitcnt:10 class1 class2 class3]
+			theme:list:
+				templates/medialist/list/autotag_medialist.thtml
+				templates/medialist/list/autotag_medialist_col.thtml
+
+		Theme variable:
+
+			autotag_medialist.thtml:
+				class
+				album_id
+				album_title
+				album_desc
+				edit_album
+
+			autotag_medialist_col.thtml:
+				media_id
+				filename_tn
+				filename_disp
+				filename_orig
+				media_filename
+				media_title
+				media_desc
+				media_keywords
+				media_category
+				media_category_name
+				media_category_description
+				released
+				edit
+
+---------------------
+ 2015/04/07 
+  1)自動タグ [medialist: 引数 sort 追加
+      sort:desc 逆順
+      sort:asc 昇順default
+  2)自動タグ[albumlist:[medialist: limitcntのdefault を0変更 0の時制限なし
+
+---------------------
+ 2015/04/09
+  1)自動タグ 追加 medialist/admin
+  2)自動タグ 変更 medialist/default

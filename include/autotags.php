@@ -1,18 +1,17 @@
 <?php
 // +--------------------------------------------------------------------------+
-// | Media Gallery Plugin - Geeklog                                           |
+// | Media Gallery Plugin - glFusion CMS                                      |
 // +--------------------------------------------------------------------------+
 // | autotags.php                                                             |
 // |                                                                          |
 // +--------------------------------------------------------------------------+
-// | Copyright (C) 2015 by the following authors:                             |
-// |                                                                          |
-// | Yoshinori Tahara       taharaxp AT gmail DOT com                         |
-// |                                                                          |
-// | Based on the Media Gallery Plugin for glFusion CMS                       |
+// | $Id:: lib-media.php 3093 2008-09-10 23:53:51Z mevans0263                $|
+// +--------------------------------------------------------------------------+
 // | Copyright (C) 2002-2008 by the following authors:                        |
 // |                                                                          |
 // | Mark R. Evans          mark AT glfusion DOT org                          |
+// | Tsuchi - Kazuko Tsuchitani tsuchitani AT ivywe DOT co DOT jp             |
+// | Ivy - Tetsuko Komma    komma ivywe DOT co DOT jp                         |
 // +--------------------------------------------------------------------------+
 // |                                                                          |
 // | This program is free software; you can redistribute it and/or            |
@@ -38,8 +37,6 @@ if (strpos(strtolower($_SERVER['PHP_SELF']), strtolower(basename(__FILE__))) !==
 // for albumlist autotag
 require_once ($_CONF['path'] . "plugins/mediagallery/include/autotags_add.inc");
 
-require_once $_CONF['path'] . 'plugins/mediagallery/include/common.php';
-
 function MG_helper_getContainer($media, $align, $container)
 {
     $style = '';
@@ -54,30 +51,43 @@ function MG_helper_getContainer($media, $align, $container)
 }
 
 
-function MG_autotags($op, $content = '', $autotag = '')
+function MG_autotags ($op, $content = '', $autotag = '')
 {
-    global $_MG_CONF, $_CONF, $_TABLES, $LANG_MG00, $LANG_MG03, $side_count, $swfjsinclude;
+    global $MG_albums, $_MG_CONF, $_CONF, $_MG_USERPREFS, $_TABLES, $LANG_MG00, $LANG_MG03, $side_count, $swfjsinclude;
+//  global $mgAutoTagArray;
+	
+	//@@@@@20120730add---->
+    $p1 = COM_applyFilter ($autotag['parm1']);
+    $p2 = COM_applyFilter ($autotag['parm2']);
+    $p=MG_parm2($p2);
+	//@@@@@20120730add<----
+
+    MG_initAlbums();
 
     static $ss_count = 0;
+
+//  if (!isset($mgAutoTagArray['count']) || empty($mgAutoTagArray['count'])) {
+//      $mgAutoTagArray['count'] = 0;
+//  }
 
     /*
      * Process the auto tag to remove any embedded &nbsp;
      */
     $tag = str_replace('&nbsp;', ' ', $autotag['tagstr']);
-    $parms = explode(' ', $tag);
+    $parms = explode (' ', $tag);
     // Extra test to see if autotag was entered with a space
     // after the module name
-    if (substr($parms[0], -1) == ':') {
+    if (substr ($parms[0], -1) == ':') {
         $startpos = strlen ($parms[0]) + strlen ($parms[1]) + 2;
-        $label = str_replace (']', '', substr($tag, $startpos));
+        $label = str_replace (']', '', substr ($tag, $startpos));
         $tagid = $parms[1];
     } else {
         $label = str_replace (']', '',
-                 substr($tag, strlen ($parms[0]) + 1));
-        $parms = explode(':', $parms[0]);
+                 substr ($tag, strlen ($parms[0]) + 1));
+        $parms = explode (':', $parms[0]);
         if (count ($parms) > 2) {
             // whoops, there was a ':' in the tag id ...
-            array_shift($parms);
+            array_shift ($parms);
             $tagid = implode (':', $parms);
         } else {
             $tagid = $parms[1];
@@ -117,22 +127,26 @@ function MG_autotags($op, $content = '', $autotag = '')
     // parameter processing - logic borrowed from
     // Dirk Haun's Flickr plugin
 
-    $px = explode(' ', trim ($autotag['parm2']));
+    $px = explode (' ', trim ($autotag['parm2']));
     if (is_array ($px)) {
         foreach ($px as $part) {
-            if (substr($part, 0, 6) == 'width:') {
-                $a = explode(':', $part);
+            if (substr ($part, 0, 6) == 'width:') {
+                $a = explode (':', $part);
                 $width = $a[1];
                 $skip++;
-            } elseif (substr($part, 0, 7) == 'height:') {
-                $a = explode(':', $part);
+            } elseif (substr ($part, 0, 7) == 'height:') {
+                $a = explode (':', $part);
                 $height = $a[1];
                 $skip++;
-            } elseif (substr($part, 0, 7) == 'border:') {
-                $a = explode(':', $part);
+            } elseif (substr ($part, 0, 6) == 'class:') {
+                $a = explode (':', $part);
+                $class = $a[1];
+                $skip++;
+            } elseif (substr ($part, 0, 7) == 'border:') {
+                $a = explode (':', $part);
                 $border = $a[1];
                 $skip++;
-            } elseif (substr($part,0, 6) == 'align:') {
+            } elseif (substr ($part,0, 6) == 'align:') {
                 $a = explode(':', $part);
                 $align = $a[1];
                 $skip++;
@@ -149,43 +163,43 @@ function MG_autotags($op, $content = '', $autotag = '')
                 $a = explode(':',$part);
                 $enable_link = $a[1];
                 $skip++;
-            } elseif (substr($part, 0, 6) == 'delay:') {
-                $a = explode(':', $part);
+            } elseif (substr ($part, 0, 6) == 'delay:') {
+                $a = explode (':', $part);
                 $delay = $a[1];
                 $skip++;
-            } elseif (substr($part, 0, 11) == 'transition:') {
-                $a = explode(':', $part);
+            } elseif (substr ($part, 0, 11) == 'transition:') {
+                $a = explode (':', $part);
                 $transition = $a[1];
                 $skip++;
-            } elseif (substr($part,0, 6) == 'title:') {
-                $a = explode(':',$part);
+            } elseif (substr ($part,0, 6) == 'title:') {
+                $a = explode (':',$part);
                 $showtitle = $a[1];
                 $skip++;
-            } elseif (substr($part, 0, 5) == 'dest:') {
-                $a = explode(':', $part);
+            } elseif (substr ($part, 0, 5) == 'dest:') {
+                $a = explode (':', $part);
                 $destination = $a[1];
                 if ($destination != 'content' && $destination != 'block') {
                     $destination = 'content';
                 }
                 $skip++;
             } elseif (substr($part,0,7) == 'linkid:') {
-                $a = explode(':',$part);
+                $a = explode (':',$part);
                 $linkID = $a[1];
                 $skip++;
             } elseif (substr($part,0,4) == 'alt:') {
-                $a = explode(':',$part);
+                $a = explode (':',$part);
                 $alt = $a[1];
                 $skip++;
             } elseif (substr($part,0,7) == 'target:') {
-                $a = explode(':',$part);
+                $a = explode (':',$part);
                 $target = $a[1];
                 $skip++;
             } elseif (substr($part,0,5) == 'type:') {
-                $a = explode(':',$part);
+                $a = explode (':',$part);
                 $mp3_type = $a[1];
                 $skip++;
             } elseif (substr($part,0,8) == 'linksrc:') {
-                $a = explode(':',$part);
+                $a = explode (':',$part);
                 $link_src = $a[1];
                 if (!in_array($link_src, array('tn', 'disp', 'orig'))) {
                     $link_src = 'disp';
@@ -197,19 +211,20 @@ function MG_autotags($op, $content = '', $autotag = '')
         }
 
         if ($skip != 0) {
-            $caption = '';
             if (count ($px) > $skip) {
                 for ($i = 0; $i < $skip; $i++) {
-                    array_shift($px);
+                    array_shift ($px);
                 }
                 $caption = trim (implode (' ', $px));
+            } else {
+                $caption = '';
             }
         }
     } else {
         $caption = trim ($autotag['parm2']);
     }
 
-    if (!is_numeric($autotag['parm1'][0])) {
+    if (!is_numeric($autotag['parm1'][0]) ) {
         switch ($autotag['parm1'][0]) {
             case 'n' :
                 $align = '';
@@ -233,7 +248,7 @@ function MG_autotags($op, $content = '', $autotag = '')
                 $aSet = 1;
                 break;
             default :
-                $align = 'left';
+                $align = (!($side_count % 2) ? 'left' : 'right');
                 $side_count++;
                 break;
         }
@@ -250,8 +265,7 @@ function MG_autotags($op, $content = '', $autotag = '')
     }
     // sanity check incase the album has been deleted or something...
     if (!in_array($autotag['tag'], array('media','image','video','audio','download','oimage','img','mlink','alink','playall'))) {
-        if (DB_count($_TABLES['mg_albums'], 'album_id', intval($parm1)) == 0)
-            return str_replace($autotag['tagstr'], '', $content);
+        if (!isset($MG_albums[$parm1]->id)) return str_replace($autotag['tagstr'], '', $content);
     }
     $ss_count = mt_rand(0,32768);
     switch ($autotag['tag']) {
@@ -264,8 +278,8 @@ function MG_autotags($op, $content = '', $autotag = '')
             $result = DB_query($sql);
             if (DB_numRows($result) <= 0) return str_replace($autotag['tagstr'], '', $content);
             $row = DB_fetchArray($result);
-            $album_data = MG_getAlbumData($row['album_id'], array('album_id'), true);
-            if (!isset($album_data['album_id']) || $album_data['access'] == 0) {
+            $aid = $row['album_id'];
+            if (!isset($MG_albums[$aid]->id) || $MG_albums[$aid]->access == 0) {
                 return str_replace($autotag['tagstr'], '', $content);
             }
             $link = '<a href="' . $_MG_CONF['site_url'] . '/download.php?mid=' . $parm1 . '">'
@@ -281,8 +295,8 @@ function MG_autotags($op, $content = '', $autotag = '')
             $result = DB_query($sql);
             if (DB_numRows($result) <= 0) return str_replace($autotag['tagstr'], '', $content);
             $row = DB_fetchArray($result);
-            $album_data = MG_getAlbumData($row['album_id'], array('album_id'), true);
-            if (!isset($album_data['album_id']) || $album_data['access'] == 0) {
+            $aid = $row['album_id'];
+            if (!isset($MG_albums[$aid]->id) || $MG_albums[$aid]->access == 0) {
                 return str_replace($autotag['tagstr'], '', $content);
             }
             if ($alt == 1 && $row['remote_url'] != '') {
@@ -295,12 +309,11 @@ function MG_autotags($op, $content = '', $autotag = '')
             break;
 
         case 'playall' :
-            $album_data = MG_getAlbumData($parm1, array('album_id'), true);
-            if (!isset($album_data['album_id']) || $album_data['access'] == 0 ||
+            if (!isset($MG_albums[$parm1]->id) || $MG_albums[$parm1]->access == 0 ||
                     (COM_isAnonUser() && $_MG_CONF['loginrequired'] == 1)) {
                 return str_replace($autotag['tagstr'], '', $content);
             }
-            $V = COM_newTemplate(MG_getTemplatePath(0));
+            $V = MG_templateInstance(MG_getTemplatePath(0));
             $V->set_file('xspf', 'xspf_radio.thtml');
             $V->set_var(array(
                 'aid'      => $parm1,
@@ -324,8 +337,8 @@ function MG_autotags($op, $content = '', $autotag = '')
             $result = DB_query($sql);
             if (DB_numRows($result) <= 0) return str_replace($autotag['tagstr'], '', $content);
             $row = DB_fetchArray($result);
-            $album_data = MG_getAlbumData($row['album_id'], array('album_id'), true);
-            if (!isset($album_data['album_id']) || $album_data['access'] == 0) {
+            $aid = $row['album_id'];
+            if (!isset($MG_albums[$aid]->id) || $MG_albums[$aid]->access == 0) {
                 return str_replace($autotag['tagstr'], '', $content);
             }
             $orig_media_url = $_MG_CONF['mediaobjects_url'] . '/orig/' . $row['media_filename'][0] . '/' . $row['media_filename'] . '.' . $row['media_mime_ext'];
@@ -393,7 +406,7 @@ function MG_autotags($op, $content = '', $autotag = '')
                 case 'application/x-troff-msvideo' :
                 case 'application/x-ms-wmz' :
                 case 'application/x-ms-wmd' :
-                    $V = COM_newTemplate(MG_getTemplatePath(0));
+                    $V = MG_templateInstance(MG_getTemplatePath(0));
                     $V->set_file('video', 'view_asf.thtml');
                     $V->set_var(array(
                         'autostart'          => $autoplay ? 'true' : 'false',
@@ -428,7 +441,7 @@ function MG_autotags($op, $content = '', $autotag = '')
                 case 'video/x-mpeq2a' :
                 case 'video/x-qtc' :
                 case 'video/x-m4v' :
-                    $V = COM_newTemplate(MG_getTemplatePath(0));
+                    $V = MG_templateInstance(MG_getTemplatePath(0));
                     $V->set_file('video', 'view_quicktime.thtml');
                     $V->set_var(array(
                         'autoref'    => 'true',
@@ -468,14 +481,14 @@ function MG_autotags($op, $content = '', $autotag = '')
                     if ($swfjsinclude > 0) {
                         $link = '';
                     } else {
-                        $S = COM_newTemplate(MG_getTemplatePath(0));
+                        $S = MG_templateInstance(MG_getTemplatePath(0));
                         $S->set_file('swf', 'swfobject.thtml');
                         $S->set_var('site_url', $_MG_CONF['site_url']);
                         $link = $S->finish($S->parse('output', 'swf'));
                         $swfjsinclude++;
                     }
 
-                    $V = COM_newTemplate(MG_getTemplatePath(0));
+                    $V = MG_templateInstance(MG_getTemplatePath(0));
                     $V->set_file('video', 'view_swf.thtml');
                     $V->set_var(array(
                         'site_url'     => $_MG_CONF['site_url'],
@@ -523,7 +536,7 @@ function MG_autotags($op, $content = '', $autotag = '')
                     if ($swfjsinclude > 0) {
                         $link = '';
                     } else {
-                        $S = COM_newTemplate(MG_getTemplatePath(0));
+                        $S = MG_templateInstance(MG_getTemplatePath(0));
                         $S->set_file('swf', 'swfobject.thtml');
                         $S->set_var('site_url', $_MG_CONF['site_url']);
                         $link = $S->finish($S->parse('output', 'swf'));
@@ -577,7 +590,7 @@ function MG_autotags($op, $content = '', $autotag = '')
                     $resolution_y = $videoheight;
                     $id  = 'id_'  . rand();
                     $id2 = 'id2_' . rand();
-                    $F = COM_newTemplate(MG_getTemplatePath(0));
+                    $F = MG_templateInstance(MG_getTemplatePath(0));
                     $F->set_file('player', 'flvfp.thtml');
                     $F->set_var(array(
                         'site_url'          => $_MG_CONF['site_url'],
@@ -601,7 +614,7 @@ function MG_autotags($op, $content = '', $autotag = '')
                     ));
                     $flv_player = $F->finish($F->parse('output', 'player'));
 
-                    $V = COM_newTemplate(MG_getTemplatePath(0));
+                    $V = MG_templateInstance(MG_getTemplatePath(0));
                     $V->set_file('video', 'view_flv_light.thtml');
                     $V->set_var(array(
                         'site_url'      => $_MG_CONF['site_url'],
@@ -627,8 +640,8 @@ function MG_autotags($op, $content = '', $autotag = '')
             $result = DB_query($sql);
             if (DB_numRows($result) <= 0) return str_replace($autotag['tagstr'], '', $content);
             $row = DB_fetchArray($result);
-            $album_data = MG_getAlbumData($row['album_id'], array('album_id'), true);
-            if (!isset($album_data['album_id']) || $album_data['access'] == 0) {
+            $aid = $row['album_id'];
+            if (!isset($MG_albums[$aid]->id) || $MG_albums[$aid]->access == 0) {
                 return str_replace($autotag['tagstr'], '', $content);
             }
             $orig_media_url = $_MG_CONF['mediaobjects_url'] . '/orig/' . $row['media_filename'][0] . '/' . $row['media_filename'] . '.' . $row['media_mime_ext'];
@@ -643,10 +656,10 @@ function MG_autotags($op, $content = '', $autotag = '')
                         $u_tn = $_MG_CONF['mediaobjects_url'] . '/' . $tfn . $ext;
                         $media_size_disp  = @getimagesize($_MG_CONF['path_mediaobjects'] . $tfn . $ext);
                         $border_width = $media_size_disp[0] + 12;
-                        $u_pic = '<img src="' . $u_tn . '" alt="" style="border:none;vertical-align:bottom;"' . XHTML . '>';
+                        $u_pic = '<img  class="uk-border-rounded" src="' . $u_tn . '" alt="" style="max-width:100%;border:none;vertical-align:bottom;"' . XHTML . '>';
                     }
 
-                    $V = COM_newTemplate(MG_getTemplatePath(0));
+                    $V = MG_templateInstance(MG_getTemplatePath(0));
                     $V->set_file('audio', ($mp3_type == 'ribbon') ? 'mp3_podcast.thtml' : 'view_mp3_flv.thtml');
                     $V->set_var(array(
                         'autostart'         => ($autoplay ? 'play' : 'stop'),
@@ -682,10 +695,10 @@ function MG_autotags($op, $content = '', $autotag = '')
                         $u_tn = $_MG_CONF['mediaobjects_url'] . '/' . $tfn . $ext;
                         $media_size_disp  = @getimagesize($_MG_CONF['path_mediaobjects'] . $tfn . $ext);
                         $border_width = $media_size_disp[0] + 12;
-                        $u_pic = '<div class="out" style="width:' . $border_width . 'px"><div class="in ltin tpin"><img src="' . $u_tn . '" alt="" style="vertical-align:bottom;"' . XHTML . '></div></div>';
+                        $u_pic = '<div class="out" style="width:' . $border_width . 'px"><div class="in ltin tpin"><img src=" class="uk-border-rounded" ' . $u_tn . '" alt="" style="max-width:100%; vertical-align:bottom;"' . XHTML . '></div></div>';
                     }
 
-                    $V = COM_newTemplate(MG_getTemplatePath(0));
+                    $V = MG_templateInstance(MG_getTemplatePath(0));
                     $V->set_file('audio', 'view_mp3_wmp.thtml');
                     $V->set_var(array(
                         'autostart'         => ($autoplay ? '1' : '0'), // $autoplay ? 'true' : 'false',
@@ -709,8 +722,8 @@ function MG_autotags($op, $content = '', $autotag = '')
 
         case 'fslideshow' :
             if (empty($parm1)) return $content;
-            $album_data = MG_getAlbumData($parm1, array('album_title', 'album_id', 'hidden'), true);
-            if (!isset($album_data['album_id']) || $album_data['access'] == 0) {
+            $aid = $parm1;
+            if (!isset($MG_albums[$parm1]->id) || $MG_albums[$parm1]->access == 0) {
                 return str_replace($autotag['tagstr'], '', $content);
             }
 
@@ -723,13 +736,13 @@ function MG_autotags($op, $content = '', $autotag = '')
             }
             // if none of the above, assume height and width both specified.
 
-            if ($caption == '' && $_MG_CONF['autotag_caption'] && isset($parm1) ) {
-                $caption = $album_data['album_title'];
+            if ($caption == '' && $_MG_CONF['autotag_caption'] && isset($aid) ) {
+                $caption = $MG_albums[$aid]->title;
             }
             $captionHTML = '<br' . XHTML . '><span style="width:' . $width . 'px;font-style:italic;font-size: smaller;text-indent:0;">' . $caption . '</span>' . LB;
             $ss_count++;
 
-            $T = COM_newTemplate(MG_getTemplatePath(0));
+            $T = MG_templateInstance(MG_getTemplatePath(0));
             $T->set_file('fslideshow', 'fsat.thtml');
             $T->set_var('site_url', $_MG_CONF['site_url']);
             $T->set_var(array(
@@ -738,7 +751,7 @@ function MG_autotags($op, $content = '', $autotag = '')
                 'movie'         => $_MG_CONF['site_url'] . '/xml.php?aid=' . $parm1 . '%26src=' . trim($src),
                 'dropshadow'    => 'true',
                 'delay'         => $delay,
-                'nolink'        => ($album_data['hidden'] || $enable_link == 0) ? 'true' : 'false',
+                'nolink'        => ($MG_albums[$parm1]->hidden || $enable_link == 0) ? 'true' : 'false',
                 'showtitle'     => ($showtitle == 'bottom' || $showtitle == 'top') ? '&showTitle=' . $showtitle : '',
                 'width'         => $width,
                 'height'        => $height,
@@ -766,12 +779,11 @@ function MG_autotags($op, $content = '', $autotag = '')
 
         case 'slideshow' :
             if (empty($parm1)) return $content;
-            $album_data = MG_getAlbumData($parm1, array('album_title', 'album_id', 'hidden'), true);
-            if (!isset($album_data['album_id']) || $album_data['access'] == 0) {
+            if (!isset($MG_albums[$parm1]->id) || $MG_albums[$parm1]->access == 0) {
                 return str_replace($autotag['tagstr'], '', $content);
             }
             if ($caption == '' && $_MG_CONF['autotag_caption'] ) {
-                $caption = $album_data['album_title'];
+                $caption = $MG_albums[$parm1]->title;
             }
             $aid = $parm1;
             $pics = '';
@@ -780,11 +792,18 @@ function MG_autotags($op, $content = '', $autotag = '')
             $maxheight = 0;
             $ss_count++;
 
-            $sql = MG_buildMediaSql(array(
-                'album_id'  => $aid,
-                'fields'    => array('media_filename', 'media_mime_ext', 'remote_url'),
-                'where'     => "m.media_type = 0 AND m.include_ss = 1"
-            ));
+            if ($MG_albums[$parm1]->hidden == 1 || $enable_link == 0) {
+                $ss_url = '';
+            } else {
+//              $ss_url = '<a href="' . $_MG_CONF['site_url'] . '/album.php?aid=' . $aid . '"' . ($target=='' ? '' : ' target="' . $target . '"') . '>';
+                $ss_url = $_MG_CONF['site_url'] . '/album.php?aid=' . $aid;
+            }
+
+            $sql = "SELECT m.media_filename,m.media_mime_ext,m.remote_url,m.media_title "
+                 . "FROM {$_TABLES['mg_media_albums']} as ma "
+                 . "INNER JOIN " . $_TABLES['mg_media'] . " as m ON ma.media_id=m.media_id "
+                 . "WHERE ma.album_id='" . addslashes($aid) . "' AND m.media_type=0 AND m.include_ss=1 "
+                 . "ORDER BY ma.media_order DESC";
             $result = DB_query($sql);
             while ($row = DB_fetchArray($result)) {
                 switch ($src) {
@@ -851,31 +870,26 @@ function MG_autotags($op, $content = '', $autotag = '')
                 if ($newwidth > $maxwidth) {
                     $maxwidth  = $newwidth;
                 }
-/*
-                if ($album->hidden == 1 || $enable_link == 0) {
-                    $pics .= '<img class="slideshowThumbnail' . $ss_count . '" src="' . $_MG_CONF['mediaobjects_url'] . '/' . $src . '/' . $row['media_filename'][0] . '/' . $row['media_filename'] . '.' . $ext . '" alt="" style="width:' . $newwidth . 'px;height:' . $newheight . 'px;border:none;position:absolute;left:0px;top:0px;vertical-align:bottom;"' . XHTML . '>' . LB;
+                if (empty($ss_url)) {
+                    $pics .= '<img class="uk-border-rounded slideshowThumbnail' . $ss_count . '" src="' . $_MG_CONF['mediaobjects_url'] . '/' . $src . '/' . $row['media_filename'][0] . '/' . $row['media_filename'] . '.' . $ext
+                           . '" alt="' . $row['media_title'] . '" style="max-width:100%; width:' . $newwidth . 'px;height:' . $newheight . 'px;'
+                           . 'border:none;position:absolute;left:0px;top:0px;vertical-align:bottom;"' . XHTML . '>' . LB;
                 } else {
-                    $pics .= '<img class="slideshowThumbnail' . $ss_count . '" src="' . $_MG_CONF['mediaobjects_url'] . '/' . $src . '/' . $row['media_filename'][0] . '/' . $row['media_filename'] . '.' . $ext . '" alt="" style="width:' . $newwidth . 'px;height:' . $newheight . 'px;border:none;position:absolute;left:0px;top:0px;vertical-align:bottom;"' . XHTML . '>' . LB;
+                    $pics .= '<a class="uk-border-rounded slideshowThumbnail' . $ss_count . '" href="' . $ss_url . '" style="position:absolute;left:0px;top:0px;">' 
+                           . '<img  class="uk-border-rounded" src="' . $_MG_CONF['mediaobjects_url'] . '/' . $src . '/' . $row['media_filename'][0] . '/' . $row['media_filename'] . '.' . $ext
+                           . '" alt="' . $row['media_title'] . '" style="max-width:100%; width:' . $newwidth . 'px;height:' . $newheight . 'px;'
+                           . 'border:none;vertical-align:bottom;"' . XHTML . '>'
+                           . '</a>' . LB;
                 }
-*/
-                $pics .= '<img class="slideshowThumbnail' . $ss_count . '" src="' . $_MG_CONF['mediaobjects_url'] . '/' . $src . '/' . $row['media_filename'][0] . '/' . $row['media_filename'] . '.' . $ext
-                      . '" alt="" style="width:' . $newwidth . 'px;height:' . $newheight . 'px;'
-                      . 'border:none;position:absolute;left:0px;top:0px;vertical-align:bottom;"' . XHTML . '>' . LB;
             }
             if ($delay <= 0) {
                 $delay = 10;
             }
-            if ($album_data['hidden'] == 1 || $enable_link == 0) {
-                $ss_url = '';
-            } else {
-//              $ss_url = '<a href="' . $_MG_CONF['site_url'] . '/album.php?aid=' . $aid . '"' . ($target=='' ? '' : ' target="' . $target . '"') . '>';
-                $ss_url = $_MG_CONF['site_url'] . '/album.php?aid=' . $aid;
-            }
 
             $link = '';
             if ($counter != 0) {
-                $T = COM_newTemplate($_MG_CONF['template_path']);
-                $T->set_file('tag', 'autotag_ss.thtml');
+                $T = MG_templateInstance($_MG_CONF['template_path']);
+                $T->set_file('tag', ($_MG_CONF['js_lib'] == 'jquery') ? 'autotag_ss_jquery.thtml' : 'autotag_ss.thtml');
                 $T->set_var(array(
                     'align'      => $align,
                     'pics'       => $pics,
@@ -907,144 +921,6 @@ function MG_autotags($op, $content = '', $autotag = '')
             }
 */
             break;
-
-
-
-
-// Testing //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        case 'gallery' :
-            if (empty($parm1)) return $content;
-            $album_data = MG_getAlbumData($parm1, array('album_title', 'album_id', 'hidden'), true);
-            if (!isset($album_data['album_id']) || $album_data['access'] == 0) {
-                return str_replace($autotag['tagstr'], '', $content);
-            }
-            if ($caption == '' && $_MG_CONF['autotag_caption'] ) {
-                $caption = $album_data['album_title'];
-            }
-            $aid = $parm1;
-            $pics = '';
-            $counter = 0;
-            $maxwidth = 0;
-            $maxheight = 0;
-            $ss_count++;
-
-            $sql = MG_buildMediaSql(array(
-                'album_id'  => $aid,
-                'fields'    => array('media_filename', 'media_mime_ext', 'remote_url'),
-                'where'     => "m.media_type = 0 AND m.include_ss = 1"
-            ));
-            $result = DB_query($sql);
-            while ($row = DB_fetchArray($result)) {
-                switch ($src) {
-                    case 'orig' :
-                        $media_size = @getimagesize($_MG_CONF['path_mediaobjects'] . 'orig/' . $row['media_filename'][0] . '/' . $row['media_filename'] . '.' . $row['media_mime_ext']);
-                        $ext = $row['media_mime_ext'];
-                        break;
-                    case 'disp' :
-                        $mfn = 'disp/' . $row['media_filename'][0] . '/' . $row['media_filename'];
-                        $tnext = MG_getMediaExt($_MG_CONF['path_mediaobjects'] . $mfn);
-                        $media_size = @getimagesize($_MG_CONF['path_mediaobjects'] . $mfn . $tnext);
-                        $ext = substr($tnext,1,3); // no use ?
-                        break;
-                    default :
-                        $mfn = 'tn/' . $row['media_filename'][0] . '/' . $row['media_filename'];
-                        $tnext = MG_getMediaExt($_MG_CONF['path_mediaobjects'] . $mfn);
-                        $media_size = @getimagesize($_MG_CONF['path_mediaobjects'] . $mfn . $tnext);
-                        $ext = substr($tnext,1,3); // no use ?
-                        $src = 'tn';
-                        break;
-                }
-                if ($media_size == false) {
-                    continue;
-                }
-
-                $counter++;
-                if ($width > 0 && $height == 0) {
-                    if ($media_size[0] > $media_size[1]) {        // landscape
-                        $ratio = $media_size[0] / $width;
-                        $newwidth = $width;
-                        $newheight = round($media_size[1] / $ratio);
-                    } else {    // portrait
-                        $ratio = $media_size[1] / $width;
-                        $newheight = $width;
-                        $newwidth = round($media_size[0] / $ratio);
-                    }
-                } else if ($width == 0 && $height == 0) {
-                    if ($media_size[0] > $media_size[1]) {        // landscape
-                        $ratio = $media_size[0] / 200;
-                        $newwidth = 200;
-                        $newheight = round($media_size[1] / $ratio);
-                    } else {    // portrait
-                        $ratio = $media_size[1] / 200;
-                        $newheight = 200;
-                        $newwidth = round($media_size[0] / $ratio);
-                    }
-                } else if ($width == 0 && $height > 0) {
-                    if ($height > $media_size[1]) {
-                        $newheight = $media_size[1];
-                        $newwidth = $media_size[0];
-                    } else {
-                        $ratio = $height / $media_size[1];
-                        $newheight = $height;
-                        $newwidth = round($media_size[0] * $ratio);
-                    }
-                } else {
-                    $newwidth = $width;
-                    $newheight = $height;
-                }
-
-                if ($newheight > $maxheight) {
-                    $maxheight = $newheight;
-                }
-                if ($newwidth > $maxwidth) {
-                    $maxwidth  = $newwidth;
-                }
-                $pics .= '<img class="slideshowThumbnail' . $ss_count . '" src="' . $_MG_CONF['mediaobjects_url'] . '/' . $src . '/' . $row['media_filename'][0] . '/' . $row['media_filename'] . '.' . $ext
-                      . '" alt="" style="width:' . $newwidth . 'px;height:' . $newheight . 'px;'
-                      . 'border:none;position:absolute;left:0px;top:0px;vertical-align:bottom;"' . XHTML . '>' . LB;
-            }
-            if ($delay <= 0) {
-                $delay = 10;
-            }
-            if ($album_data['hidden'] == 1 || $enable_link == 0) {
-                $ss_url = '';
-            } else {
-                $ss_url = $_MG_CONF['site_url'] . '/album.php?aid=' . $aid;
-            }
-
-            $link = '';
-            if ($counter != 0) {
-                $T = COM_newTemplate($_MG_CONF['template_path']);
-                $T->set_file('tag', 'autotag_ss.thtml');
-                $T->set_var(array(
-                    'align'      => $align,
-                    'pics'       => $pics,
-                    'caption'    => $caption,
-                    'maxheight'  => $maxheight,
-                    'maxwidth'   => $maxwidth,
-                    'width'      => $maxwidth,
-                    'framewidth' => $maxwidth + 10,
-                    'ss_count'   => $ss_count,
-                    'delay'      => $delay * 1000,
-                    'border'     => $border ? 'border: silver solid;border-width: 1px;' : '',
-                    'xhtml'      => XHTML,
-                    'sslink'     => $ss_url,
-                ));
-                if ($align == 'left' || $align == 'right') {
-                    $T->set_var('float','float: ' . $align . ';');
-                } else {
-                    $T->set_var('float','float:left;');
-                    $align = 'left';
-                }
-
-                $T->set_var('margin-right', ($align == 'left') ? 'margin-right:15px;' : '');
-
-                $link = $T->finish($T->parse('output', 'tag'));
-            }
-            break;
-
-
-
 		case 'medialist' :
 			$link=MG_medialist ($p1
 				, $p['lastparm2'], $p['theme'],$p['limitcnt'],$p['sort']);
@@ -1053,18 +929,12 @@ function MG_autotags($op, $content = '', $autotag = '')
 			$link=MG_albumlist ($p1, $p['limitcnt']	, $p['order']
 				, $p['lastparm2'], $p['theme']);
             break;
-
-
-
-
-
         case 'album' :
             if (empty($parm1)) {
                 $side_count--;
                 return $content;
             }
-            $album_data = MG_getAlbumData($parm1, array('album_title', 'album_id', 'hidden', 'tn_attached'), true);
-            if (!isset($album_data['album_id']) || $album_data['access'] == 0) {
+            if (!isset($MG_albums[$parm1]->id) || $MG_albums[$parm1]->access == 0) {
                 $side_count--;
                 return str_replace($autotag['tagstr'], '', $content);
             }
@@ -1075,18 +945,18 @@ function MG_autotags($op, $content = '', $autotag = '')
             } else {
                 $alttag = ' alt=""';
                 if ($_MG_CONF['autotag_caption']) {
-                    $caption = $album_data['album_title'];
+                    $caption = $MG_albums[$parm1]->title;
                 }
             }
-//            $aid = $parm1;
+            $aid = $parm1;
 
-            if ($album_data['tn_attached'] == 1) {
+            if ($MG_albums[$parm1]->tn_attached == 1) {
                 $tfn = 'covers/cover_' . $parm1;
                 $ext = MG_getMediaExt($_MG_CONF['path_mediaobjects'] . $tfn);
                 $tnImage = $_MG_CONF['mediaobjects_url'] . '/' . $tfn . $ext;
                 $tnFileName = $_MG_CONF['path_mediaobjects'] . $tfn . $ext;
             } else {
-                $filename = MG_getAlbumCover($parm1);
+                $filename = $MG_albums[$aid]->findCover();
                 if ($filename != '') {
                     $tfn = 'tn/' . $filename[0] . '/' . $filename;
                     $ext = MG_getMediaExt($_MG_CONF['path_mediaobjects'] . $tfn);
@@ -1125,7 +995,7 @@ function MG_autotags($op, $content = '', $autotag = '')
                 $newwidth = $width;
                 $newheight = $height;
             }
-            $tagtext = '<img src="' . $tnImage . '" ' . $alttag . 'style="width:' . $newwidth . 'px;height:' . $newheight . 'px;border:none;vertical-align:bottom;"' . XHTML . '>';
+            $tagtext = '<img  class="uk-border-rounded"   src="' . $tnImage . '" ' . $alttag . 'style="max-width:100%; width:' . $newwidth . 'px;height:' . $newheight . 'px;border:none;vertical-align:bottom;"' . XHTML . '>';
 
             if ($linkID == 0) {
                 $url = $_MG_CONF['site_url'] . '/album.php?aid=' . $parm1;
@@ -1142,7 +1012,7 @@ function MG_autotags($op, $content = '', $autotag = '')
                 $link = '<a href="' . $url . '"' . ($target=='' ? '' : ' target="' . $target . '"') . '>' . $tagtext . '</a>';
             }
 
-            $T = COM_newTemplate($_MG_CONF['template_path']);
+            $T = MG_templateInstance($_MG_CONF['template_path']);
             $T->set_file('tag', ($border == 0) ? 'autotag_nb.thtml' : 'autotag.thtml');
             $T->set_var(array(
                 'ss_count'     => $ss_count,
@@ -1172,15 +1042,14 @@ function MG_autotags($op, $content = '', $autotag = '')
                 $side_count--;
                 return $content;
             }
-            $album_data = MG_getAlbumData($parm1, array('album_title', 'album_id', 'hidden'), true);
-            if (!isset($album_data['album_id']) || $album_data['access'] == 0) {
+            if (!isset($MG_albums[$parm1]->id) || $MG_albums[$parm1]->access == 0) {
                 $side_count--;
                 return str_replace($autotag['tagstr'], '', $content);
             }
             if ($caption == '') {
-                $caption = $album_data['album_title'];
+                $caption = $MG_albums[$parm1]->title;
             }
-            $link = '<a href="'.$_MG_CONF['site_url'] . '/album.php?aid=' . $album_data['album_id'] .'">'.$caption.'</a>';
+            $link = '<a href="'.$_MG_CONF['site_url'] . '/album.php?aid=' . $MG_albums[$parm1]->id .'">'.$caption.'</a>';
             return str_replace ($autotag['tagstr'], $link, $content);
             break;
 
@@ -1192,9 +1061,10 @@ function MG_autotags($op, $content = '', $autotag = '')
             if (empty($parm1)) return $content;
             $direct_link = '';
             $ss_count++;
-            $alttag = ' alt=""';
-            if ($caption != '') {
-                $alttag = ' alt="' . $caption . '" title="' . $caption . '"';
+
+            $classtag = ' class="uk-border-rounded"';
+            if ($class != '') {
+                $classtag = ' class="uk-border-rounded ' . $class . '"';
             }
             $sql = "SELECT ma.album_id,m.media_title,m.media_type,m.media_filename,"
                         . "m.media_mime_ext,m.mime_type,m.media_tn_attached,m.remote_url "
@@ -1205,23 +1075,28 @@ function MG_autotags($op, $content = '', $autotag = '')
             if (DB_numRows($result) <= 0) return $content; // no image found
             $row = DB_fetchArray($result);
             $aid = $row['album_id'];
-            $album_data = MG_getAlbumData($aid, array('album_id', 'hidden'), true);
-            if (!isset($album_data['album_id']) || $album_data['access'] == 0) {
+            if (!isset($MG_albums[$aid]->id) || $MG_albums[$aid]->access == 0) {
                 return str_replace($autotag['tagstr'], '', $content);
             }
             if ($caption == '' && $_MG_CONF['autotag_caption']) {
                 $caption = $row['media_title'];
             }
+
+            $alttag = ' alt=""';
+            if ($caption != '') {
+                $alttag = ' alt="' . $caption . '" title="' . $caption . '"';
+            }
+
             switch($row['media_type']) {
                 case 0 :    // standard image
                     $fn =          $row['media_filename'][0] . '/' . $row['media_filename'] . '.' . $row['media_mime_ext'];
                     $tfn = 'tn/' . $row['media_filename'][0] . '/' . $row['media_filename'];
-                    if ($autotag['tag'] == 'oimage') {
-                        $default_thumbnail = (($_MG_CONF['discard_original'] == 1) ? 'disp/' : 'orig/') . $fn;
+                    if ($autotag['tag'] == 'oimage' ) {
+                        $default_thumbnail = (($_MG_CONF['discard_originals'] == 1) ? 'disp/' : 'orig/') . $fn;
                     } else {
                         switch ($src) {
                             case 'orig' :
-                                $default_thumbnail = (($_MG_CONF['discard_original'] == 1) ? 'disp/' : 'orig/') . $fn;
+                                $default_thumbnail = (($_MG_CONF['discard_originals'] == 1) ? 'disp/' : 'orig/') . $fn;
                                 break;
                             case 'disp' :
                                 $default_thumbnail = 'disp/' . $fn;
@@ -1278,13 +1153,13 @@ function MG_autotags($op, $content = '', $autotag = '')
 
             $mediaSize = @getimagesize($media_thumbnail_file);
             if ($mediaSize == false) return str_replace($autotag['tagstr'], '', $content);
-            if ($autotag['tag'] == 'oimage' || $src == 'orig') {
+            if ($autotag['tag'] == 'oimage' ) { // without orig
                 $newwidth  = $mediaSize[0];
                 $newheight = $mediaSize[1];
             } else {
                 if ($width > 0) {
                     $tn_height = $width;
-                } else {
+                } else if ($width == 0){
                     switch ($src) {
                         case 'orig' :
                         case 'disp' :
@@ -1294,6 +1169,8 @@ function MG_autotags($op, $content = '', $autotag = '')
                             $tn_height = 200;
                             break;
                     }
+                } else {
+                        $tn_height = -1;
                 }
 
                 if ($mediaSize[0] > $mediaSize[1]) {
@@ -1306,12 +1183,21 @@ function MG_autotags($op, $content = '', $autotag = '')
                     $newwidth = round($mediaSize[0] / $ratio);
                 }
             }
-            $tagtext = '<img src="' . $media_thumbnail . '" ' . $alttag . ' style="width:' . $newwidth . 'px;height:' . $newheight . 'px;border:none;vertical-align:bottom;"' . XHTML . '>';
+
+            // if height == -1, set size none {
+            if ($tn_height == -1){
+                $tagtext = '<img style="max-width:100%" src="' . $media_thumbnail . '" ' . $alttag .$classtag. XHTML . '>';
+            } else {
+/* for ivysoho.com  */
+                $tagtext = '<img style="max-width:100%" src="' . $media_thumbnail . '" ' . $alttag .$classtag. XHTML . '>';
+//                $tagtext = '<img class="uk-border-rounded" src="' . $media_thumbnail . '" ' . $alttag .$classtag.' style="width:' . $newwidth . 'px;height:' . $newheight . 'px;"' . XHTML . '>';
+            }
+            // } if height == -1, set size none
 
             $link = '';
             if ($alt == 1 && $row['remote_url'] != '') {
-
                 $url = $row['remote_url'];
+$url = $media_thumbnail; /* for ivysoho.com */
                 if ($autotag['tag'] != 'image' && $enable_link != 0) {
                     $link = '<a href="' . $url . '"' . ($target=='' ? '' : ' target="' . $target . '"') . '>' . $tagtext . '</a>';
                 } else {
@@ -1321,51 +1207,73 @@ function MG_autotags($op, $content = '', $autotag = '')
             } else if ($linkID == 0) {
 
                 $url = $_MG_CONF['site_url'] . '/media.php?s=' . $parm1;
+$url = $media_thumbnail; /* for ivysoho.com */
 
             } else {
 
-
                 if ($linkID < 1000000) {
-                    $link_album = MG_getAlbumData($linkID, array('album_id', 'hidden'), false);
-                    if (!isset($link_album['album_id'])) {
+
+                    if (isset($MG_albums[$linkID]->id)) {
                         $url = $_MG_CONF['site_url'] . '/album.php?aid=' . $linkID;
-                        if ($autotag['tag'] != 'image' && $link_album['hidden'] != 1 && $enable_link != 0) {
+                        if ($autotag['tag'] != 'image' && $MG_albums[$linkID]->hidden != 1 && $enable_link != 0) {
                             $link = '<a href="' . $url . '"' . ($target=='' ? '' : ' target="' . $target . '"') . '>' . $tagtext . '</a>';
                          } else {
                             $link = $tagtext;
                         }
+
+$url = $media_thumbnail; /* for ivysoho.com */
+
                     } else {
                         $url = $_MG_CONF['site_url'] . '/media.php?s=' . $parm1;
+$url = $media_thumbnail; /* for ivysoho.com */
+
                     }
 
                 } else {
 
-                    $linkAID = intval(DB_getItem($_TABLES['mg_media_albums'], 'album_id', 'media_id="' . addslashes($linkID) . '"'));
+                    $linkAID = intval(DB_getItem($_TABLES['mg_media_albums'],'album_id','media_id="' . addslashes($linkID) . '"'));
                     if ($linkAID != 0) {
                         $url = $_MG_CONF['site_url'] . '/media.php?s=' . $linkID;
-                        $hidden = DB_getItem($_TABLES['mg_albums'], 'hidden', "album_id=" . intval($linkAID));
-                        if ($autotag['tag'] != 'image' && $hidden != 1 && $enable_link != 0) {
-                            $link = '<a href="' . $url . '"' . ($target=='' ? '' : ' target="' . $target . '"') . '>' . $tagtext . '</a>';
+                        if ($autotag['tag'] != 'image' && $MG_albums[$linkAID]->hidden != 1 && $enable_link != 0) {
+                            $link = '<a class="lightbox" href="' . $url . '"' . ($target=='' ? '' : ' target="' . $target . '"') . '>' . $tagtext . '</a>';
                         } else {
                             $link = $tagtext;
                         }
                     } else {
                         $url = $_MG_CONF['site_url'] . '/media.php?s=' . $parm1;
                     }
+$url = $media_thumbnail; /* for ivysoho.com */
+
 
                 }
             }
 
             if ($link == '') {
-                if ($autotag['tag'] != 'image' && ($album_data['hidden'] != 1 || $enable_link == 2) && $enable_link != 0) {
+                if ($autotag['tag'] != 'image' && ($MG_albums[$aid]->hidden != 1 || $enable_link == 2) && $enable_link != 0) {
                     if ($enable_link == 2 && $direct_link != '') {
                         if ($_MG_CONF['disable_lightbox'] == true) {
                             $link = $tagtext;
                         } else {
-                            $link = '<a href="' . $direct_link . '" rel="lightbox" title="' . strip_tags(str_replace('$','&#36;',$caption)) . '">' . $tagtext . '</a>';
+                            $link = '<a class="lightbox" href="' . $direct_link . '" rel="lightbox" title="' . strip_tags(str_replace('$','&#36;',$caption)) . '">' . $tagtext . '</a>';
                         }
                     } else {
-                        $link = '<a href="' . $url . '"' . ($target=='' ? '' : ' target="' . $target . '"') . '>' . $tagtext . '</a>';
+//                        $link = '<a class="lightbox" href="' . $url . '"' . ($target=='' ? '' : ' target="' . $target . '"') . '>' . $tagtext . '</a>';
+
+
+			  $link = '
+<div class="uk-text-center"><!-- This is the anchor toggling the modal -->
+<a href="#'.$row['media_filename'].'" data-uk-modal><img src="'.$url.'" class="uk-border-roundeduk-animation-fade" style="-webkit-box-shadow: 5px 5px 15px 2px rgba(200,200,200,200); box-shadow: 5px 5px 15px 2px rgba(200,200,200,200); max-width: 100%; margin: 10px;" data-uk-scrollspy="{cls:\'uk-animation-fade\', repeat: true}"></a></div>
+
+<!-- This is the modal -->
+<div id="'.$row['media_filename'].'" class="uk-modal">
+    <div class="uk-modal-dialog uk-modal-dialog-frameless">
+        <a href="" class="uk-modal-close uk-close uk-close-alt"></a>
+        <img src="'.$url.'" class="uk-border-rounded">
+    </div>
+</div>';
+
+
+
                     }
                 } else {
                     $link = $tagtext;
@@ -1375,7 +1283,7 @@ function MG_autotags($op, $content = '', $autotag = '')
             if ($autotag['tag'] == 'img') {
                 $link = MG_helper_getContainer($link, $align, 'div');
             } else {
-                $T = COM_newTemplate($_MG_CONF['template_path']);
+                $T = MG_templateInstance($_MG_CONF['template_path']);
                 $T->set_file('tag', ($border == 0) ? 'autotag_nb.thtml' : 'autotag.thtml');
                 $T->set_var(array(
                     'ss_count'     => $ss_count,
@@ -1396,10 +1304,15 @@ function MG_autotags($op, $content = '', $autotag = '')
                 $link = $T->finish($T->parse('output', 'tag'));
 
                 if ($align == 'center') {
-                    $link = '<div class="uk-text-center">' . LB . $link . '</div>'. LB;
+                    $link = '<div style="text-align:center;">' . LB . $link . '</div>'. LB;
                 }
             }
             break;
     }
+//  if ($destination == 'block') {
+//      $mgAutoTagArray['tags'][$mgAutoTagArray['count']] = $link;
+//      $mgAutoTagArray['count']++;
+//      $link = '';
+//  }
     return str_replace($autotag['tagstr'], $link, $content);
 }
