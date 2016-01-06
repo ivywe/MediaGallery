@@ -31,6 +31,9 @@ if (strpos(strtolower($_SERVER['PHP_SELF']), strtolower(basename(__FILE__))) !==
     die('This file can not be used on its own!');
 }
 
+// for albumlist autotag
+require_once ($_CONF['path'] . "plugins/mediagallery/include/autotags_add.inc");
+
 require_once $_CONF['path'] . 'plugins/mediagallery/include/common.php';
 
 function MG_helper_getContainer($media, $align, $container)
@@ -1035,7 +1038,17 @@ function MG_autotags($op, $content = '', $autotag = '')
                 $link = $T->finish($T->parse('output', 'tag'));
             }
             break;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+		case 'medialist' :
+			$link=MG_medialist ($p1
+				, $p['lastparm2'], $p['theme'],$p['limitcnt'],$p['sort']);
+            break;
+		case 'albumlist' :
+			$link=MG_albumlist ($p1, $p['limitcnt']	, $p['order']
+				, $p['lastparm2'], $p['theme']);
+            break;
 
 
 
@@ -1379,7 +1392,7 @@ function MG_autotags($op, $content = '', $autotag = '')
                 $link = $T->finish($T->parse('output', 'tag'));
 
                 if ($align == 'center') {
-                    $link = '<div style="text-align:center;">' . LB . $link . '</div>'. LB;
+                    $link = '<div class="uk-text-center">' . LB . $link . '</div>'. LB;
                 }
             }
             break;
