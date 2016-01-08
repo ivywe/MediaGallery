@@ -779,7 +779,8 @@ function plugin_autotags_mediagallery ($op, $content = '', $autotag = '')
     if ($op == 'tagname') {
         return array('album','media','img','slideshow','fslideshow','video','audio',
                      'download','image','oimage','mlink','alink','playall',
-                     'gallery', 'medialist' ,'albumlist');
+                     'gallery'
+					 ,'medialist','albumlist');//@@@@@
     } else if ($op == 'parse') {
         require_once $_CONF['path'] . 'plugins/mediagallery/include/autotags.php';
         return MG_autotags($op, $content, $autotag);
