@@ -1,0 +1,7 @@
+{# begin {templatelocation} #}
+
+	<li>
+		<img src="{filename_disp}" alt="{media_title}">
+    </li>
+
+{# end {templatelocation} #}

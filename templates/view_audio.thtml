@@ -1,6 +1,5 @@
 {# begin {templatelocation} #}
 
-<!-- start view_audio.thtml -->
 {lbslideshow}
 <ul class="uk-breadcrumb">{birdseed}</ul>
 <div class="mg_album_header">
