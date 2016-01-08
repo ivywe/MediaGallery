@@ -1,3 +1,5 @@
+{# begin {templatelocation} #}
+
 {start_block}
 <script type="text/javascript">
 <!--
@@ -318,3 +320,5 @@ function change(what) {
   </div>
 </form>
 {end_block}
+
+{# end {templatelocation} #}

@@ -1,3 +1,5 @@
+{# begin {templatelocation} #}
+
 <div>{lang_parent_album}: {parent_album}</div>
 <form name="sortalbum" method="post" action="{s_form_action}" class="uk-form">
   <table class="mg_admin_table">
@@ -25,3 +27,5 @@
     <input type="submit" name="mode" value="{lang_cancel}"{xhtml}>
   </div>
 </form>
+
+{# end {templatelocation} #}

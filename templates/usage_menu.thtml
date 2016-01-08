@@ -1,3 +1,5 @@
+{# begin {templatelocation} #}
+
 <form method="post" action="{s_form_action}" class="uk-form">
 <table cellspacing="0" cellpadding="2" style="width:100%;">
   <tr>
@@ -20,3 +22,5 @@
   <input type="submit" name="mode" value="{lang_submit}"{xhtml}>
 </div>
 </form>
+
+{# end {templatelocation} #}

@@ -1,3 +1,5 @@
+{# begin {templatelocation} #}
+
 <form method="post" action="{s_form_action}" name="mg_static_sort" enctype="multipart/form-data" class="uk-form">
   <div>
   <table border="0" cellspacing="0" cellpadding="5">
@@ -38,3 +40,5 @@
   <input type="submit" value="{lang_cancel}" name="mode"{xhtml}>
 </div>
 </form>
+
+{# end {templatelocation} #}

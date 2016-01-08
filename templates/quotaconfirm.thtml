@@ -1,3 +1,5 @@
+{# begin {templatelocation} #}
+
 <form method="post" action="{s_form_action}" class="uk-form">
 <table class="mg_admin_table">
 <tr>
@@ -13,3 +15,5 @@
 </tr>
 </table>
 </form>
+
+{# end {templatelocation} #}

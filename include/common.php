@@ -1167,12 +1167,11 @@ function MG_getBirdseed($album_id, $hot=0, $sortOrder=0, $page=0)
     foreach ($items as $key => $item) {
         $birdseed = '';
         if ($key < $count) {
-            $birdseed .= ' ' . $_MG_CONF['seperator'] . ' ';
         }
         if ($item['href'] !== NULL) {
-            $birdseed .= COM_createLink($item['title'], $item['href']);
+            $birdseed .= "<li>".COM_createLink($item['title'], $item['href'])."</li>";
         } else {
-            $birdseed .= $item['title'];
+            $birdseed .= "<li>".$item['title']"</li>";
         }
         $retval = $birdseed . $retval;
     }

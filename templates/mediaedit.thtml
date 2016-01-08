@@ -1,3 +1,4 @@
+{# begin {templatelocation} #}
 
 <table class="mg_mediaitems_table">
   <tr>
@@ -110,3 +111,5 @@
   {media_exif_info}
 
 </form>
+
+{# end {templatelocation} #}

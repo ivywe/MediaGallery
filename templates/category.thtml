@@ -1,3 +1,5 @@
+{# begin {templatelocation} #}
+
 <script type="text/javascript">
 function doCheckAll_cat()
 {
@@ -60,3 +62,5 @@ function doUnCheckAll_cat()
     <input type="hidden" name="action" value="category"{xhtml}>
   </div>
 </form>
+
+{# end {templatelocation} #}

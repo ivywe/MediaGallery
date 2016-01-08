@@ -1,3 +1,5 @@
+{# begin {templatelocation} #}
+
 <fieldset style="margin-bottom:6px">
   <legend>{exif_title}</legend>
   <table class="mg_exif_table">
@@ -11,3 +13,5 @@
   <!-- END exifRow -->
   </table>
 </fieldset>
+
+{# end {templatelocation} #}

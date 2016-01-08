@@ -1,6 +1,8 @@
+{# begin {templatelocation} #}
+
 <!-- start view_audio.thtml -->
 {lbslideshow}
-<div class="bc_navigation">{birdseed}</div>
+<ul class="uk-breadcrumb">{birdseed}</ul>
 <div class="mg_album_header">
   <div class="mg_album_title"><strong>{album_title}</strong>{!if rsslink}&nbsp;{rsslink}{!endif}</div>
   <div class="mg_search">
@@ -57,3 +59,5 @@ function popitup(url)
 }
 //]]>
 </script>
+
+{# end {templatelocation} #}

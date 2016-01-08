@@ -1,3 +1,5 @@
+{# begin {templatelocation} #}
+
 <table class="mg_admin_table">
 <!-- BEGIN dirRow -->
 <tr>
@@ -23,3 +25,5 @@
 </tr>
 <!-- END fileRow -->
 </table>
+
+{# end {templatelocation} #}

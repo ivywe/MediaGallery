@@ -1,3 +1,5 @@
+{# begin {templatelocation} #}
+
 <h2>{lang_playback_options}</h2>
 <table class="mg_admin_table">
   <tr>
@@ -126,3 +128,5 @@
     </td>
   </tr>
 </table>
+
+{# end {templatelocation} #}

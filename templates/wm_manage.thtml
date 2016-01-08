@@ -1,3 +1,5 @@
+{# begin {templatelocation} #}
+
 <script type="text/javascript">
 //<![CDATA[
 function doCheckAll_watermark()
@@ -73,3 +75,5 @@ jkpopwin.focus()
   </div>
 </form>
 {end_block}
+
+{# end {templatelocation} #}

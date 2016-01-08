@@ -1,4 +1,8 @@
-<div class="MG_autotag_{align}" style="width:{framewidth}px;">
-  {autotag}
-  <span class="MG_autotag_caption" style="width:{width}px;">{caption}</span>
+{# begin {templatelocation} #}
+
+<div class="uk-thumbnail" style="width:{framewidth}px;">
+    {autotag}
+    {!if caption}<div class="uk-thumbnail-caption" style="width:{width}px;">{caption}</div>{!endif}
 </div>
+
+{# end {templatelocation} #}
