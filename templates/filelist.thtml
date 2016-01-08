@@ -1,6 +1,6 @@
 {# begin {templatelocation} #}
 
-<table class="mg_admin_table">
+<table class="uk-table uk-table-condensed uk-table-striped uk-width-1-1" style="background:#ffffff;">
 <!-- BEGIN dirRow -->
 <tr>
   <th colspan="3" style="width:100%;">

@@ -1,7 +1,7 @@
 {# begin {templatelocation} #}
 
 <div class="plugin">
-<table width="100%" border="0" align="left">
+<table class="uk-table uk-table-condensed uk-table-striped uk-width-1-1" style="background:#ffffff;">
   <tr class="pluginCellTitle">
     <td><span style="font-weight:bold;">{lang_title}</span></td>
   </tr>

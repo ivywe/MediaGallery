@@ -73,7 +73,7 @@ div.mg-block-exif {
 </style>
 </head>
 <body>
-<table class="mg_mediaitems_table">
+<table class="uk-table uk-table-condensed uk-table-striped uk-width-1-1" style="background:#ffffff;">
  <tr>
    <td style="text-align:center;width:100%;">
      {media_thumbnail}

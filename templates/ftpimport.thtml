@@ -30,7 +30,7 @@ function doUnCheckAll_ftpinput()
     <input type="hidden" name="action" value="{action}"{xhtml}>
     <input type="hidden" name="album_id" value="{album_id}"{xhtml}>
     <input type="hidden" name="purgefiles" value="{purgefiles}"{xhtml}>
-    <table style="width:100%;border:none;text-align:left;">
+    <table class="uk-table uk-table-condensed uk-table-striped uk-width-1-1" style="background:#ffffff;">
       <tr>
         <td class="pluginCellTitle" style="text-align:center;"><span style="font-weight:bold;">{lang_filelist}</span></td>
       </tr>

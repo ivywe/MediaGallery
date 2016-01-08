@@ -8,7 +8,7 @@
 {lang_global_perm_help}
 <br{xhtml}><br{xhtml}>
 </div>
-<table class="mg_admin_table">
+<table class="uk-table uk-table-condensed uk-table-striped uk-width-1-1" style="background:#ffffff;">
   <tr>
     <th>{lang_attribute}</th>
     <th align="left">{lang_value}</th>

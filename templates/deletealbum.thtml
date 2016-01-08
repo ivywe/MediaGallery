@@ -5,7 +5,7 @@
 <div>
 <input type="hidden" name="album_id" value="{album_id}">
 <input type="hidden" name="action" value="confalbum">
-<table cellpadding="3" cellspacing="1" border="0">
+<table class="uk-table uk-table-condensed uk-table-striped uk-width-1-1" style="background:#ffffff;">
   <tr>
     <td style="width:15%;text-align:right;">
       <span style="font-weight:bold;">{lang_title}</span>

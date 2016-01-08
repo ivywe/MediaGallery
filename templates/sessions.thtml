@@ -28,7 +28,7 @@ function doUnCheckAll_sessions()
 {!endif}
 <form name="sessions" method="post" action="{s_form_action}" class="uk-form">
 {!if noitems}
-<table class="mg_admin_table">
+<table class="uk-table uk-table-condensed uk-table-striped uk-width-1-1" style="background:#ffffff;">
   <tr>
     <th style="width:50px">{lang_select}</th>
     <th>{lang_session_description}</th>
@@ -44,7 +44,7 @@ function doUnCheckAll_sessions()
 </table>
 {!endif}
 <!-- BEGIN sessItems -->
-<table class="mg_admin_table">
+<table class="uk-table uk-table-condensed uk-table-striped uk-width-1-1" style="background:#ffffff;">
   <tr>
     <th style="width:50px">{lang_select}</th>
     <th>{lang_session_description}</th>

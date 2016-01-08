@@ -12,7 +12,7 @@
   <span>{lang_starting_album} {album_list}</span>
 </div>
 
-<table class="mg_admin_table">
+<table class="uk-table uk-table-condensed uk-table-striped uk-width-1-1" style="background:#ffffff;">
   <tr>
     <th>{lang_attribute}</th>
     <th align="left">{lang_value}</th>
@@ -191,7 +191,7 @@
   <tr>
     <td colspan="2" align="center">
       <!--<table border="0" cellpadding="5" cellspacing="5" style="margin:0px auto;">-->
-      <table class="mg_mediatype_table">
+      <table class="uk-table uk-table-condensed uk-table-striped uk-width-1-1" style="background:#ffffff;">
         <tr>
           <th style="text-align:center"><b>{lang_image}</b></th>
           <th style="text-align:center"><b>{lang_audio} / {lang_video}</b></th>
@@ -199,7 +199,8 @@
         </tr>
         <tr>
           <td valign="top" align="center">
-            <table class="mg_frame_table" style="width:auto"><tr><td align="left">
+            <table class="uk-table uk-table-condensed uk-table-striped uk-width-1-1" style="background:#ffffff;">
+<tr><td align="left">
               <input type="checkbox" name="format_jpg" value="1"{xhtml}>&nbsp;&nbsp;
               <span>{lang_jpg}</span>
               <br{xhtml}>
@@ -224,7 +225,8 @@
             </td></tr></table>
           </td>
           <td valign="top" align="center">
-            <table class="mg_frame_table" style="width:auto"><tr><td align="left">
+            <table class="uk-table uk-table-condensed uk-table-striped uk-width-1-1" style="background:#ffffff;">
+<tr><td align="left">
               <input type="checkbox" name="format_mp3" value="128"{xhtml}>
               &nbsp;&nbsp;<span>{lang_mp3}</span>
               <br{xhtml}>
@@ -257,7 +259,8 @@
             </td></tr></table>
           </td>
           <td valign="top" align="center">
-            <table class="mg_frame_table" style="width:auto"><tr><td align="left">
+            <table class="uk-table uk-table-condensed uk-table-striped uk-width-1-1" style="background:#ffffff;">
+<tr><td align="left">
               <input type="checkbox" name="format_zip" value="16384"{xhtml}>
               &nbsp;&nbsp;<span>{lang_zip}</span>
               <br{xhtml}>
