@@ -3,9 +3,9 @@
 {lbslideshow}
 <script type="text/javascript" src="{site_url}/players/audio-player.js"></script>
 
-<div class="bc_navigation">
+<ul class="uk-breadcrumb">
 {birdseed}
-</div>
+</ul>
 
 <div class="mg_album_header">
 <div class="mg_album_title"><strong>{album_title}</strong>{!if rsslink}&nbsp;&nbsp;{rsslink}{!endif}</div>

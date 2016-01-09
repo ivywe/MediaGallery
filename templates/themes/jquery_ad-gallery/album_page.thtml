@@ -3,9 +3,9 @@
 {lbslideshow}
 <script type="text/javascript" src="{site_url}/players/audio-player.js"></script>
 
-<div class="bc_navigation">
+<ul class="uk-breadcrumb">
 {birdseed}
-</div>
+</ul>
 
 
 <h2 class="uk-float-left uk-text-bold uk-h2 uk-margin-left">{album_title}</h2>
