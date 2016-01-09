@@ -1171,7 +1171,7 @@ function MG_getBirdseed($album_id, $hot=0, $sortOrder=0, $page=0)
         if ($item['href'] !== NULL) {
             $birdseed .= "<li>".COM_createLink($item['title'], $item['href'])."</li>";
         } else {
-            $birdseed .= "<li>".$item['title']"</li>";
+            $birdseed .= "<li>".$item['title']."</li>";
         }
         $retval = $birdseed . $retval;
     }
