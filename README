@@ -129,8 +129,8 @@ From Version1.6.10 I extend the functionality of glFusion version in earnest.
 
 Feature of Version1.7.0
 ---------------------
-* Geeklog Configuration 
-* Geeklog Caching Template Library
+* Geeklog Configuration by dengen
+* Geeklog Caching Template Library by dengen
 * Autotag albumlist and medialist by Tsuchi@ivywe
 
   Format:　[albumlist:albumid limitcnt:xx order:xx XXXX]

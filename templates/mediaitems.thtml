@@ -84,4 +84,34 @@ function doUnCheckAll_mediaitems() {
   {lang_batch_options}&nbsp;&nbsp;{batchoptionselect}&nbsp;<input type="submit" name="mode" value="{lang_batch}"{xhtml}>
 </div>
 
+<ul class="uk-nav uk-nav-parent-icon uk-margin-top" data-uk-nav>
+    <li class="uk-parent">
+        <a href="#" class="uk-button">Normal layout autotag: &#91;medialist:{album_id}&#93;</a>
+        <ul class="uk-nav-sub">
+            <li>
+				<div class="uk-panel">
+					<div>html</div>
+					{!!autotag medialist:'.{album_id}.' theme:admin !!}
+				</div>
+			</li>
+        </ul>
+    </li>
+</ul>
+
+<ul class="uk-nav uk-nav-parent-icon" data-uk-nav>
+    <li class="uk-parent">
+        <a href="#" class="uk-button">Thumnail layout autotag: &#91;medialist:{album_id} theme:uikit_grid_js&#93;</a>
+        <ul class="uk-nav-sub">
+            <li>
+				<div class="uk-panel">
+					<div>html</div>
+					{!!autotag medialist:'.{album_id}.' theme:admin_uikit_grid_js !!}
+				</div>
+			</li>
+        </ul>
+    </li>
+</ul>
+
+
+
 {# end {templatelocation} #}

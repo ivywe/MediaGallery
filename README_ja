@@ -59,8 +59,8 @@ public_html/mediagallery/mediaobjects/tn 及び配下のディレクトリ
 
 Version1.7.0について
 ---------------------
-Geeklogのコンフィギュレーションに対応しました。
-Geeklog2.1の新しいテーマシステムに対応しました。
+Geeklogのコンフィギュレーションに対応しました。by dengen
+Geeklog2.1の新しいテーマシステムに対応しました。by dengen
 自動タグを追加しました。albumlist and medialist by Tsuchi@ivywe
 
   Format:　[albumlist:albumid limitcnt:xx order:xx XXXX]
