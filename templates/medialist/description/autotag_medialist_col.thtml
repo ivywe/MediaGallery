@@ -1,5 +1,4 @@
 {# begin {templatelocation} #}
--->
 
 	<div class="uk-margin-large uk-text-center {class}">
 		<a href="{filename_disp}" data-uk-lightbox="{ group:'my-group{albumid}' }" title="{media_title}">

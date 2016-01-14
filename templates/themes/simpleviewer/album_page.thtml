@@ -26,7 +26,6 @@
 {!endif}
 </div>
 
-
 <div class="uk-text-center">
 
   <!--START SIMPLEVIEWER EMBED.-->
@@ -46,7 +45,6 @@
   <!-- END SIMPLEVIEWER EMBED -->
 
 </div>
-
 
 <div class="mg_navbar">
   <span>{album_id_display}</span><span class="mg_separator" style="">|</span><span>{page_number}</span>

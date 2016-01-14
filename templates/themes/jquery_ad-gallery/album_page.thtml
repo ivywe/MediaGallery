@@ -7,7 +7,6 @@
 {birdseed}
 </ul>
 
-
 <h2 class="uk-float-left uk-text-bold uk-h2 uk-margin-left">{album_title}</h2>
 <div class="uk-float-right uk-text-right uk-vertical-align-middle uk-text-nowrap uk-margin-right">
   {!if rsslink}

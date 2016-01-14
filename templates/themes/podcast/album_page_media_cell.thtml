@@ -28,7 +28,6 @@
       <div class="uk-text-small">{alt_edit_link}</div>
       {!endif}
 
-
      </div>
     </td>
     <td class="uk-vertical-align-top">
